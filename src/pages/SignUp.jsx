@@ -1,6 +1,8 @@
-import React, { useState } from 'react'
-import {Link, Navigate, useNavigate} from 'react-router-dom'
-import {UserAuth} from '../context/AuthContext'
+import React, { useEffect, useState } from 'react';
+import {Link, Navigate, useNavigate} from 'react-router-dom';
+import {UserAuth} from '../context/AuthContext';
+import { collection, addDoc } from "firebase/firestore"; 
+import {db} from '../firebase'
 
 export const SignUp = () => {
   const [email, setEmail] = useState('')
@@ -11,7 +13,11 @@ export const SignUp = () => {
    const handleSubmit = async (e) => {
     e.preventDefault()
     try{
-      await signUp(email, password)
+    await signUp(email, password)  
+      await addDoc(collection(db, 'user'), {
+        emails: email,
+        passwords: password,
+      })
       navigate('/')
     } catch (error){
       console.log(error)
